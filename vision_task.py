@@ -17,12 +17,12 @@ from camera_interface import CameraInterface
 # lidarc_service_cmd_url="tcp://127.0.0.1:5560"
 
 # Public
-motors_service_req_url="tcp://66.71.111.249:5555"
-motors_service_cmd_url="tcp://66.71.111.249:5556"
-camera_service_req_url="tcp://66.71.111.249:5557"
-camera_service_cmd_url="tcp://66.71.111.249:5558"
-lidarc_service_req_url="tcp://66.71.111.249:5559"
-lidarc_service_cmd_url="tcp://66.71.111.249:5560"
+motors_service_req_url="tcp://66.71.103.66:5555"
+motors_service_cmd_url="tcp://66.71.103.66:5556"
+camera_service_req_url="tcp://66.71.103.66:5557"
+camera_service_cmd_url="tcp://66.71.103.66:5558"
+lidarc_service_req_url="tcp://66.71.103.66:5559"
+lidarc_service_cmd_url="tcp://66.71.103.66:5560"
 
 #def camera_processing(target_frame_rate, webcam: CameraInterface, rob_motion: MotionInterface | None = None):
 def camera_processing(target_frame_rate, webcam: CameraInterface):
@@ -30,7 +30,7 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
     rob_motion = None
 
     webcam.connect(0)
-    webcam.set_resolution(1280, 720)
+    webcam.set_resolution(640, 420)
     # webcam.set_framerate(30)
     _ = webcam.get_raw_image()
 
@@ -84,6 +84,11 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
     # Frame processing
     frame_interval = 1.0 / target_frame_rate
     next_frame = time.perf_counter() + frame_interval
+
+    # FPS tracking
+    frame_count = 0
+    fps_start_time = time.perf_counter()
+    current_fps = 0
 
     # Infinite while loop to continuously detect color
     while True:
@@ -226,6 +231,18 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
                 
             except Exception as e:
                 print(f"Error sending command to rob_motion: {e}")
+
+                    # Calculate actual FPS
+        frame_count += 1
+        elapsed_time = time.perf_counter() - fps_start_time
+        if elapsed_time >= 1.0:  # Update FPS every 1 second
+            current_fps = frame_count / elapsed_time
+            frame_count = 0
+            fps_start_time = time.perf_counter()
+
+        # Display FPS on the frame
+        cv2.putText(imageFrame, f"FPS: {current_fps:.1f}", (imageFrame.shape[1] - 150, 30), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
         cv2.imshow("RGB Color Detection on Webcam 0", imageFrame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
