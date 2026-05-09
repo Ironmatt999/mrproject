@@ -30,7 +30,7 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
     rob_motion = None
 
     webcam.connect(0)
-    webcam.set_resolution(640, 480)
+    webcam.set_resolution(1280, 720)
     # webcam.set_framerate(30)
     _ = webcam.get_raw_image()
 
