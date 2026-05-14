@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import time
 
 class CameraController:
     """
@@ -13,7 +14,16 @@ class CameraController:
         if self.cap is not None:
             self.cap.release()
         
-        self.cap = cv2.VideoCapture(camera_index)
+        # Check the OS and set the appropriate backend for better performance
+        if cv2.__version__.startswith('4') and cv2.getBuildInformation().find('Windows') != -1:
+            # FOR WINDOWS, using DSHOW backend can improve performance and compatibility with certain cameras
+            self.cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
+        else:
+            # For Linux, using V4L2 backend can improve performance and compatibility with certain cameras
+            self.cap = cv2.VideoCapture(camera_index, cv2.CAP_V4L2) # , cv2.CAP_VFW
+            #pipeline = "v4l2src device=/dev/video0 ! videoconvert ! appsink"
+            #self.cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
+
         if not self.cap.isOpened():
             print(f"[ERROR] Could not open camera {camera_index}")
         else:
@@ -22,9 +32,19 @@ class CameraController:
     def set_resolution(self, width: int, height: int) -> None:
         """Set the camera resolution."""
         if self.cap:
+            self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+            time.sleep(0.05)  # Allow time for the camera to adjust settings
             self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
             self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
             print(f"[INFO] Resolution set to {width}x{height}")
+            time.sleep(0.05)  # Allow time for the camera to adjust settings
+            # Get and print the actual resolution to confirm
+            actual_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            actual_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            print(f"[INFO] Actual resolution is {actual_width}x{actual_height}")
+
+
+
 
     def set_framerate(self, fps: int) -> None:
         """Set the camera framerate."""
