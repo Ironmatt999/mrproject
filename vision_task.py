@@ -17,12 +17,12 @@ from camera_interface import CameraInterface
 # lidarc_service_cmd_url="tcp://127.0.0.1:5560"
 
 # Public
-motors_service_req_url="tcp://66.71.103.66:5555"
-motors_service_cmd_url="tcp://66.71.103.66:5556"
-camera_service_req_url="tcp://66.71.103.66:5557"
-camera_service_cmd_url="tcp://66.71.103.66:5558"
-lidarc_service_req_url="tcp://66.71.103.66:5559"
-lidarc_service_cmd_url="tcp://66.71.103.66:5560"
+motors_service_req_url="tcp://192.168.86.33:5555"
+motors_service_cmd_url="tcp://192.168.86.33:5556"
+camera_service_req_url="tcp://192.168.86.33:5557"
+camera_service_cmd_url="tcp://192.168.86.33:5558"
+lidarc_service_req_url="tcp://192.168.86.33:5559"
+lidarc_service_cmd_url="tcp://192.168.86.33:5560"
 
 #def camera_processing(target_frame_rate, webcam: CameraInterface, rob_motion: MotionInterface | None = None):
 def camera_processing(target_frame_rate, webcam: CameraInterface):
@@ -30,9 +30,13 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
     rob_motion = None
 
     webcam.connect(0)
-    webcam.set_resolution(640, 420)
+    webcam.set_resolution(1280, 720)
     # webcam.set_framerate(30)
-    _ = webcam.get_raw_image()
+    # _ = webcam.get_raw_image()
+
+    jpeg_encoded = webcam.get_jpeg_image()
+    _ = cv2.imdecode(jpeg_encoded, cv2.IMREAD_COLOR)
+
 
     # Direct code
     # # Webcam variable will hold the USB camera device
@@ -103,7 +107,11 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
 
         # '_' variable is a boolean to check if frame was detected (ignored), actual frame goes into imageFrame
         # _, imageFrame = webcam.read()
-        imageFrame = webcam.get_raw_image()
+
+        # imageFrame = webcam.get_raw_image()
+
+        jpeg_encoded=webcam.get_jpeg_image()
+        imageFrame = cv2.imdecode(jpeg_encoded, cv2.IMREAD_COLOR)
 
         # hsvFrame will hold the frame but converted from BGR color space to HSV color space for more accuracy
         # HSV space can set a specific brightness in case we maybe want to detect LEDs (traffic lights) in the future
@@ -263,6 +271,6 @@ if __name__ == "__main__":
 
     webcam.ping()
 
-    camera_processing(target_frame_rate=30, webcam=webcam)
+    camera_processing(target_frame_rate=60, webcam=webcam)
 
 
