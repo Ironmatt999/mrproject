@@ -1,6 +1,11 @@
+import time
+import platform
+
 import numpy as np
 import cv2
-import time
+
+
+
 
 class CameraController:
     """
@@ -14,16 +19,19 @@ class CameraController:
         if self.cap is not None:
             self.cap.release()
         
-        # # Check the OS and set the appropriate backend for better performance
-        # if cv2.__version__.startswith('4') and cv2.getBuildInformation().find('Windows') != -1:
-        #     # FOR WINDOWS, using DSHOW backend can improve performance and compatibility with certain cameras
-        #     self.cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
-        # else:
-        #     # For Linux, using V4L2 backend can improve performance and compatibility with certain cameras
-        #     self.cap = cv2.VideoCapture(camera_index, cv2.CAP_V4L2) # , cv2.CAP_VFW
-        #     #pipeline = "v4l2src device=/dev/video0 ! videoconvert ! appsink"
-        #     #self.cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
-        self.cap = cv2.VideoCapture(camera_index)
+        current_os = platform.system()
+        if current_os == "Windows":
+            print("Running on Windows")
+            # FOR WINDOWS, using DSHOW backend can improve performance and compatibility with certain cameras
+            self.cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
+        elif current_os == "Linux":
+            print("Running on Linux")
+            # For Linux, using V4L2 backend can improve performance and compatibility with certain cameras
+            self.cap = cv2.VideoCapture(camera_index, cv2.CAP_V4L2) # , cv2.CAP_VFW
+        elif current_os == "Darwin":
+            print("Running on macOS")
+            # For Linux, using V4L2 backend can improve performance and compatibility with certain cameras
+            self.cap = cv2.VideoCapture(camera_index) # ???
 
         if not self.cap.isOpened():
             print(f"[ERROR] Could not open camera {camera_index}")
@@ -33,7 +41,8 @@ class CameraController:
     def set_resolution(self, width: int, height: int) -> None:
         """Set the camera resolution."""
         if self.cap:
-            self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+            # TODO: If broke comment out next line!
+            # self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
             time.sleep(0.05)  # Allow time for the camera to adjust settings
             self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
             self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)

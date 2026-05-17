@@ -32,10 +32,10 @@ class PyRPlidar:
 
         # Default simple rectangular room (-5000, -5000) to (5000, 5000) in mm
         self.room_segments = [
-            ((-5000, -5000), (5000, -5000)),
-            ((5000, -5000), (5000, 5000)),
-            ((5000, 5000), (-5000, 5000)),
-            ((-5000, 5000), (-5000, -5000)),
+            ((-1000, -1000), (1000, -1000)),
+            ((1000, -1000), (1000, 1000)),
+            ((1000, 1000), (-1000, 1000)),
+            ((-1000, 1000), (-1000, -1000)),
         ]
 
         # Robot's simulated pose
@@ -59,7 +59,7 @@ class PyRPlidar:
         self.stop_motor()
         self.connected = False
 
-    def start_motor(self):
+    def set_motor_pwm(self, speed):
         if not self.connected:
             raise Exception("Lidar not connected")
         print("Simulating motor start...")

@@ -1,11 +1,12 @@
 import threading
 import time
 from mrlib.camera_controller import CameraController
-#from lidar_controller import LidarController
-#from motion_controller import MotionController
+from mrlib.lidar_controller_fake import LidarController
+from mrlib.motion_controller_fake import MotionController
 from mrlib.remote_service import RemoteService
 
-# Local host only
+
+# Local host only i.e. all code is running on your computer
 motors_service_req_url="tcp://127.0.0.1:5555"
 motors_service_cmd_url="tcp://127.0.0.1:5556"
 camera_service_req_url="tcp://127.0.0.1:5557"
@@ -21,19 +22,19 @@ lidarc_service_cmd_url="tcp://127.0.0.1:5560"
 # lidarc_service_req_url="tcp://0.0.0.0:5559"
 # lidarc_service_cmd_url="tcp://0.0.0.0:5560"
 
-def main(start_motors: str = "", start_camera: bool = False, start_lidar: bool = False):
+def main(start_motors: bool = False, start_camera: bool = False, start_lidar: bool = False):
     services = []
     threads = []
 
     # 1. Initialize Motion service
-    # if start_motors:
-    #     motors = MotionController()
-    #     motor_service = RemoteService(
-    #         target_instance=motors,
-    #         req_url=motors_service_req_url,
-    #         cmd_url=motors_service_cmd_url
-    #     )
-    #     services.append(motor_service)
+    if start_motors:
+        motors = MotionController()
+        motor_service = RemoteService(
+            target_instance=motors,
+            req_url=motors_service_req_url,
+            cmd_url=motors_service_cmd_url
+        )
+        services.append(motor_service)
 
     # 2. Initialize Camera service
     if start_camera:
@@ -46,14 +47,14 @@ def main(start_motors: str = "", start_camera: bool = False, start_lidar: bool =
         services.append(camera_service)
 
     # 3. Initialize Lidar service
-    # if start_lidar:
-    #     lidar = LidarController()
-    #     lidar_service = RemoteService(
-    #         target_instance=lidar,
-    #         req_url=lidarc_service_req_url,
-    #         cmd_url=lidarc_service_cmd_url
-    #     )
-    #     services.append(lidar_service)
+    if start_lidar:
+        lidar = LidarController()
+        lidar_service = RemoteService(
+            target_instance=lidar,
+            req_url=lidarc_service_req_url,
+            cmd_url=lidarc_service_cmd_url
+        )
+        services.append(lidar_service)
 
     # 4. Start all services in separate threads
     for service in services:
@@ -83,14 +84,4 @@ def main(start_motors: str = "", start_camera: bool = False, start_lidar: bool =
         print("[SYSTEM] All services stopped safely.")
 
 if __name__ == "__main__":
-    main(start_motors="", start_camera=True, start_lidar=False)
-
-
-        # if start_motors == "Real":
-        #     # Use real hardware or serial_port=fake_serial for testing
-        #     motors = MotionController(port='/dev/ttyACM0', baud_rate=57600)
-        # else:
-        #     # With fake serial
-        #     import fake_motion_hw
-        #     fake_serial = fake_motion_hw.FakeMotionSerial()
-        #     motors = MotionController(serial_port=fake_serial)
+    main(start_motors=True, start_camera=True, start_lidar=True)

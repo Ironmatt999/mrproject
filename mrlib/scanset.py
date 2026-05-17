@@ -25,19 +25,23 @@ current_scans = []
 recent_scans = []
 prev_angle = None
 ave_points_per_scan = 1000
-scans_rotation=0
+scans_rotation = 0
+batch_counter = 0
 for measurement in scan_generator:
     print(f"{measurement.distance = }")
     print(f"{measurement.angle = }")
     current_scans.append((-measurement.angle, measurement.distance))
+    scans_rotation += 1
     if prev_angle is not None and (prev_angle > 270 and measurement.angle < 90):
-
-
-    
+        ave_points_per_scan = scans_rotation*.1+ave_points_per_scan*.9
+        scans_rotation = 0
+    if (batch_counter > ave_points_per_scan):
+        batch_counter = 0
         recent_scans = current_scans
         current_scans = []
+    prev_angle = measurement.angle
 
-
+    
 
 lidar.stop()
 lidar.stop_motor()

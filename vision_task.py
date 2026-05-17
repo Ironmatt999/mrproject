@@ -29,13 +29,13 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
     # C
     rob_motion = None
 
-    webcam.connect(6)
+    webcam.connect(0)
     webcam.set_resolution(1280, 720)
     # webcam.set_framerate(30)
-    _ = webcam.get_raw_image()
+    # _ = webcam.get_raw_image()
 
-    #jpeg_encoded = webcam.get_jpeg_image()
-    #_ = cv2.imdecode(jpeg_encoded, cv2.IMREAD_COLOR)
+    jpeg_encoded = webcam.get_jpeg_image()
+    _ = cv2.imdecode(jpeg_encoded, cv2.IMREAD_COLOR)
 
 
     # Direct code
@@ -108,10 +108,10 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
         # '_' variable is a boolean to check if frame was detected (ignored), actual frame goes into imageFrame
         # _, imageFrame = webcam.read()
 
-        imageFrame = webcam.get_raw_image()
+        # imageFrame = webcam.get_raw_image()
 
-        #jpeg_encoded=webcam.get_jpeg_image()
-        #imageFrame = cv2.imdecode(jpeg_encoded, cv2.IMREAD_COLOR)
+        jpeg_encoded=webcam.get_jpeg_image()
+        imageFrame = cv2.imdecode(jpeg_encoded, cv2.IMREAD_COLOR)
 
         # hsvFrame will hold the frame but converted from BGR color space to HSV color space for more accuracy
         # HSV space can set a specific brightness in case we maybe want to detect LEDs (traffic lights) in the future
@@ -271,6 +271,6 @@ if __name__ == "__main__":
 
     webcam.ping()
 
-    camera_processing(target_frame_rate=60, webcam=webcam)
+    camera_processing(target_frame_rate=30, webcam=webcam)
 
 
