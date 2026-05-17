@@ -3,7 +3,7 @@ import pygame
 import time
 
 from mrlib.lidar_interface import LidarInterface
-#from motion_interface import MotionInterface
+from mrlib.motion_interface import MotionInterface
 
 
 # Local host only
@@ -72,8 +72,15 @@ def scan_worker(target_frame_rate = 5):
     fps_start_time = time.perf_counter()
     current_fps = 0
 
+    rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
+    rob_motion.connect()
+
+    rob_motion.set_wheel_speeds(30, 100)
+
     # Infinite while loop to continuously detect color
     while True:
+        x, y, theta = rob_motion.get_position()
+
         # Calculate how much time is left until the next frame
         sleep_time = next_frame - time.perf_counter()
         if sleep_time > 0:
@@ -112,6 +119,9 @@ def scan_worker(target_frame_rate = 5):
             else:
                 color = GREEN
             pygame.draw.circle(screen, color, (xs[i], ys[i]), 2)
+
+        label = font_small.render(f"FPS: {current_fps:.1f}", True, WHITE)
+        screen.blit(label, (10, 10))
 
         # pygame y is flipped
         pygame.display.flip()

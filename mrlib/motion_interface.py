@@ -54,6 +54,6 @@ class MotionInterface(RemoteClientBase):
         """Turn robot left at the specified speed"""
         ...
     
-    def getposition(self) -> tuple[float,float,float]:
+    def get_position(self) -> tuple[float,float,float]:
         """Get position"""
         ...

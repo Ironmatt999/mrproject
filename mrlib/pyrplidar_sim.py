@@ -3,6 +3,11 @@ import random
 import time
 import numpy as np
 
+from mrlib.motion_interface import MotionInterface
+
+# Local host only
+motors_service_req_url="tcp://127.0.0.1:5555"
+motors_service_cmd_url="tcp://127.0.0.1:5556"
 
 class PyRPlidarMeasurement:
     """
@@ -29,6 +34,8 @@ class PyRPlidar:
         self.connected = False
         self.motor_running = False
         self.scanning = False
+
+        self.rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
 
         # Default simple rectangular room (-5000, -5000) to (5000, 5000) in mm
         self.room_segments = [
@@ -76,8 +83,8 @@ class PyRPlidar:
         """
         self.room_segments = segments
 
-    def set_pose(self, x, y, heading):
-        """Set robot pose in mm and degrees."""
+    def set_position(self, x, y, heading):
+        """Set robot position in mm and degrees."""
         self.pos_x = x
         self.pos_y = y
         self.heading = heading
@@ -129,6 +136,11 @@ class PyRPlidar:
                 if not self.scanning:
                     break
                 
+                x, y, theta = self.rob_motion.get_position()
+                self.pos_x = x
+                self.pos_y = y
+                self.heading = theta
+
                 # Generate standard normal noise
                 noise = np.clip(
                     angle_step * np.abs(np.random.normal(0, 0.2, None)),

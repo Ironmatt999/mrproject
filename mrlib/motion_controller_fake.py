@@ -1,6 +1,6 @@
 import time
 import threading
-from mrlib.motorsim import RobotState
+from mrlib.motor_sim import RobotState
 
 class MotionController:
     def __init__(self):
@@ -14,7 +14,7 @@ class MotionController:
         """Background thread to continuously update the robot's position"""
         while self.connected:
             self.motor.update_position()
-            time.sleep(0.2)  # Simulate waiting for ardino
+            time.sleep(0.1)
 
     def connect(self, port='/dev/ttyACM0', baudrate=57600, timeout=3, serial_port=None):
         print(f"Simulating connection to {port} at {baudrate} baud...")
@@ -49,9 +49,9 @@ class MotionController:
         """Turn robot left at the specified speed"""
         self.motor.set_wheel_speeds(-speed, speed)
     
-    def getposition(self) -> tuple[float,float,float]:
+    def get_position(self) -> tuple[float,float,float]:
         """Get position"""
-        return (self.motor.x, self.motor.y, self.motor.theta)
+        return (self.motor.x, self.motor.y, self.motor.theta * 180 / 3.14159)
     
     # def read_encoders(self) -> dict:
     #     """Read encoder values"""

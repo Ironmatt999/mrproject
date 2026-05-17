@@ -1,4 +1,4 @@
-import numpy as np
+#import numpy as np
 import time
 
 from mrlib.motion_interface import MotionInterface
@@ -27,27 +27,27 @@ if __name__ == "__main__":
     rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
     rob_motion.connect()
 
-    x, y, theta = rob_motion.getposition()
+    x, y, theta = rob_motion.get_position()
     print(f" {x = }, {y = }, {theta = }")
     
     rob_motion.set_wheel_speeds(1, 1)
     
     for i in range(5):
         time.sleep(1)
-        x, y, theta = rob_motion.getposition()
+        x, y, theta = rob_motion.get_position()
         print(f" {x = }, {y = }, {theta = }")
 
 
     rob_motion.set_wheel_speeds(1, 1)
     for i in range(5):
         time.sleep(1)
-        x, y, theta = rob_motion.getposition()
+        x, y, theta = rob_motion.get_position()
         print(f" {x = }, {y = }, {theta = }")
 
     rob_motion.set_wheel_speeds(2, 2)
     for i in range(5):
         time.sleep(1)
-        x, y, theta = rob_motion.getposition()
+        x, y, theta = rob_motion.get_position()
         print(f" {x = }, {y = }, {theta = }")
 
     rob_motion.set_wheel_speeds(50, 100)
@@ -55,5 +55,5 @@ if __name__ == "__main__":
     rob_motion.set_wheel_speeds(100, -100)
     time.sleep(1)
     rob_motion.stop()
-    x, y, theta = rob_motion.getposition()
+    x, y, theta = rob_motion.get_position()
     print(f" {x = }, {y = }, {theta = }")
