@@ -8,20 +8,20 @@ from mrlib.motion_interface import MotionInterface
 from mrlib.camera_interface import CameraInterface
 
 # Local host only
-motors_service_req_url="tcp://127.0.0.1:5555"
-motors_service_cmd_url="tcp://127.0.0.1:5556"
-camera_service_req_url="tcp://127.0.0.1:5557"
-camera_service_cmd_url="tcp://127.0.0.1:5558"
-lidarc_service_req_url="tcp://127.0.0.1:5559"
-lidarc_service_cmd_url="tcp://127.0.0.1:5560"
+# motors_service_req_url="tcp://127.0.0.1:5555"
+# motors_service_cmd_url="tcp://127.0.0.1:5556"
+# camera_service_req_url="tcp://127.0.0.1:5557"
+# camera_service_cmd_url="tcp://127.0.0.1:5558"
+# lidarc_service_req_url="tcp://127.0.0.1:5559"
+# lidarc_service_cmd_url="tcp://127.0.0.1:5560"
 
 # Public
-# motors_service_req_url="tcp://192.168.86.33:5555"
-# motors_service_cmd_url="tcp://192.168.86.33:5556"
-# camera_service_req_url="tcp://192.168.86.33:5557"
-# camera_service_cmd_url="tcp://192.168.86.33:5558"
-# lidarc_service_req_url="tcp://192.168.86.33:5559"
-# lidarc_service_cmd_url="tcp://192.168.86.33:5560"
+motors_service_req_url="tcp://66.71.103.66:5555"
+motors_service_cmd_url="tcp://66.71.103.66:5556"
+camera_service_req_url="tcp://66.71.103.66:5557"
+camera_service_cmd_url="tcp://66.71.103.66:5558"
+lidarc_service_req_url="tcp://66.71.103.66:5559"
+lidarc_service_cmd_url="tcp://66.71.103.66:5560"
 
 
 # Height and width of screen
@@ -296,7 +296,8 @@ def scan_worker(target_frame_rate = 5):
 
     lidar = LidarInterface(lidarc_service_req_url, lidarc_service_cmd_url)
     lidar.connect(port="/dev/ttyUSB0", baudrate=115200, timeout=3)
-    lidar.set_motor_pwm(600)
+    time.sleep(0.1)
+    lidar.set_motor_pwm(500)
     time.sleep(0.5)
 
 
@@ -308,15 +309,15 @@ def scan_worker(target_frame_rate = 5):
     frame_count = 0
     fps_start_time = time.perf_counter()
     current_fps = 0
+    rob_motion = None
+    # rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
+    # rob_motion.connect(port='/dev/ttyACM0', baud_rate=57600, timeout=1)
 
-    rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
-    rob_motion.connect()
-
-    rob_motion.set_wheel_speeds(30, 100)
+    # rob_motion.set_wheel_speeds(30, 100)
 
     # Infinite while loop to continuously detect color
     while True:
-        x, y, theta = rob_motion.get_position()
+        # x, y, theta = rob_motion.get_position()
 
         # Calculate how much time is left until the next frame
         sleep_time = next_frame - time.perf_counter()
@@ -372,6 +373,7 @@ def scan_worker(target_frame_rate = 5):
             fps_start_time = time.perf_counter()
 
         if not running:
+            lidar.close()
             break
 
 
