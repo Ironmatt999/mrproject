@@ -25,7 +25,7 @@ class LidarController:
         print(f"[INFO] LiDAR connected on {port}")
 
     def _lidar_worker(self):
-        """Background thread to continuously grab measurements from the sensor."""
+        """Background thread to continuously grab scans from the sensor."""
         Max_points_per_set = 3000
         a_scan_set = np.empty((Max_points_per_set, 2))  # To store the latest scan as an array of (angle, distance) pairs
         n = 0
@@ -37,12 +37,12 @@ class LidarController:
 
         try:
             scan_generator = self.lidar.start_scan()
-            for measurement in scan_generator:
+            for scan in scan_generator:
                 if not self.running:
                     break
                 # Get from the scan point
-                dist = measurement.distance
-                angle = measurement.angle
+                dist = scan.distance
+                angle = scan.angle
 
                 if n < Max_points_per_set:
                     a_scan_set[n,0] = dist
@@ -53,7 +53,7 @@ class LidarController:
                 running_angle = 0.9 * prior_running_angle + 0.1 * angle
                 # Check if complete set
                 if prior_running_angle > 180 and running_angle < 180:
-                    # # Update the latest measurement in a thread-safe manner
+                    # # Update the latest scan in a thread-safe manner
                     with self._data_lock:
                         self.latest_scan_set = a_scan_set[:n,:]
                     # Make new object
@@ -76,7 +76,7 @@ class LidarController:
 
     def get_scan(self) -> np.ndarray:
         """
-        RPC Method: Returns the most recent measurement data.
+        RPC Method: Returns the most recent scan data.
         Returns an empty np.ndarray if no data is available.
         """
         with self._data_lock:

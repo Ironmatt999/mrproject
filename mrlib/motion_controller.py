@@ -4,6 +4,7 @@ import serial
 class MotionController:
     def __init__(self):
         self.cap = None
+        self.serial_port = None
 
     def connect(self, port='/dev/ttyACM0', baud_rate=57600, timeout=1):
         """

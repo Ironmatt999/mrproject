@@ -1,8 +1,9 @@
 import threading
 import time
+
 from mrlib.camera_controller import CameraController
-#from lidar_controller import LidarController
-#from motion_controller import MotionController
+from mrlib.lidar_controller import LidarController
+from mrlib.motion_controller import MotionController
 from mrlib.remote_service import RemoteService
 
 # Local host only (only if all code is on the raspi)
@@ -21,7 +22,7 @@ camera_service_cmd_url="tcp://0.0.0.0:5558"
 lidarc_service_req_url="tcp://0.0.0.0:5559"
 lidarc_service_cmd_url="tcp://0.0.0.0:5560"
 
-def main(start_motors: str = "", start_camera: bool = False, start_lidar: bool = False):
+def main(start_motors: bool = True, start_camera: bool = True, start_lidar: bool = True):
     services = []
     threads = []
 
@@ -83,7 +84,7 @@ def main(start_motors: str = "", start_camera: bool = False, start_lidar: bool =
         print("[SYSTEM] All services stopped safely.")
 
 if __name__ == "__main__":
-    main(start_motors="", start_camera=True, start_lidar=False)
+    main(start_motors=True, start_camera=True, start_lidar=True)
 
 
         # if start_motors == "Real":
