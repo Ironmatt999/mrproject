@@ -8,20 +8,20 @@ from mrlib.motion_interface import MotionInterface
 from mrlib.camera_interface import CameraInterface
 
 # Local host only
-# motors_service_req_url="tcp://127.0.0.1:5555"
-# motors_service_cmd_url="tcp://127.0.0.1:5556"
-# camera_service_req_url="tcp://127.0.0.1:5557"
-# camera_service_cmd_url="tcp://127.0.0.1:5558"
-# lidarc_service_req_url="tcp://127.0.0.1:5559"
-# lidarc_service_cmd_url="tcp://127.0.0.1:5560"
+motors_service_req_url="tcp://127.0.0.1:5555"
+motors_service_cmd_url="tcp://127.0.0.1:5556"
+camera_service_req_url="tcp://127.0.0.1:5557"
+camera_service_cmd_url="tcp://127.0.0.1:5558"
+lidarc_service_req_url="tcp://127.0.0.1:5559"
+lidarc_service_cmd_url="tcp://127.0.0.1:5560"
 
 # Public
-motors_service_req_url="tcp://66.71.103.66:5555"
-motors_service_cmd_url="tcp://66.71.103.66:5556"
-camera_service_req_url="tcp://66.71.103.66:5557"
-camera_service_cmd_url="tcp://66.71.103.66:5558"
-lidarc_service_req_url="tcp://66.71.103.66:5559"
-lidarc_service_cmd_url="tcp://66.71.103.66:5560"
+# motors_service_req_url="tcp://66.71.103.66:5555"
+# motors_service_cmd_url="tcp://66.71.103.66:5556"
+# camera_service_req_url="tcp://66.71.103.66:5557"
+# camera_service_cmd_url="tcp://66.71.103.66:5558"
+# lidarc_service_req_url="tcp://66.71.103.66:5559"
+# # lidarc_service_cmd_url="tcp://66.71.103.66:5560"
 
 
 # Height and width of screen
