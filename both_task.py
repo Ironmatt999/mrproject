@@ -51,7 +51,8 @@ def camera_processing(target_frame_rate, webcam: CameraInterface):
     jpeg_encoded = webcam.get_jpeg_image()
     _ = cv2.imdecode(jpeg_encoded, cv2.IMREAD_COLOR)
 
-
+    rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
+    rob_motion.connect(port='/dev/ttyACM0', baud_rate=57600, timeout=1)
     # Direct code
     # # Webcam variable will hold the USB camera device
     # webcam = cv2.VideoCapture(0) # 0 means first camera found
@@ -391,4 +392,6 @@ if __name__ == "__main__":
     cam_worker_thread = threading.Thread(target=camera_processing, args=(5, webcam), daemon=True)
     cam_worker_thread.start()
     scan_worker()
+    
+    
     

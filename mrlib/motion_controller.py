@@ -6,7 +6,7 @@ class MotionController:
         self.cap = None
         self.serial_port = None
 
-    def connect(self, port='/dev/ttyACM0', baud_rate=57600, timeout=1):
+    def connect(self, port='/dev/ttyACM0', baud_rate=57600, timeout=1) -> None:
         """
         If serial_port is provided, use it (for testing).
         Otherwise create a real serial connection.
@@ -39,7 +39,7 @@ class MotionController:
     def close(self) -> None:
         """Close the serial connection"""
         self.serial_port.close()
-        
+
     def stop(self) -> None:
         """Stop all motors"""
         self._set_velocity(0, 0, 0, 0)
@@ -75,3 +75,6 @@ class MotionController:
             except (ValueError, IndexError):
                 return {"error": response}
         return {"error": "No response"}
+    
+    def get_position(self) -> tuple[float, float, float]:
+        return (0.0, 0.0, 0.0)
