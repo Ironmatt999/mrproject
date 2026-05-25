@@ -39,6 +39,24 @@ RED = (255, 0, 0)
 DARK_GREEN = (0, 100, 0)
 WHITE = (255, 255, 255)
 
+def controller_processing():
+    rob_motion = None
+    pygame.joystick.init()
+    joystick = pygame.joystick.Joystick(0)
+    rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
+    rob_motion.connect()
+    joystickid = joystick.get_name()
+    numbut=joystick.get_numbuttons()
+    print(joystickid)
+    print(numbut)
+    while (True):
+        leftstick = joystick.get_axis(1)
+        rightstick = joystick.get_axis(3)
+        rob_motion.set_wheel_speeds(int(leftstick*-100), rightstick*-100)
+
+
+
+
 def camera_processing(target_frame_rate, webcam: CameraInterface):
     # C
     rob_motion = None
@@ -309,14 +327,14 @@ def scan_worker(target_frame_rate = 5):
     fps_start_time = time.perf_counter()
     current_fps = 0
 
-    rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
-    rob_motion.connect()
+    # rob_motion = MotionInterface(motors_service_req_url, motors_service_cmd_url)
+    # rob_motion.connect()
 
-    rob_motion.set_wheel_speeds(30, 100)
+    # rob_motion.set_wheel_speeds(30, 100)
 
     # Infinite while loop to continuously detect color
     while True:
-        x, y, theta = rob_motion.get_position()
+        # x, y, theta = rob_motion.get_position()
 
         # Calculate how much time is left until the next frame
         sleep_time = next_frame - time.perf_counter()
@@ -332,7 +350,7 @@ def scan_worker(target_frame_rate = 5):
 
         scan_set = lidar.get_scan()
         if len(scan_set) > 0:
-            xs, ys = polar_to_cartesian(scan_set[:,0], scan_set[:,1])
+            xs, ys = polar_to_cartesian(scan_set[:,0], scan_set[:,1]+90)
             N = len(xs)
         else:
             N = 0
@@ -388,5 +406,7 @@ if __name__ == "__main__":
     webcam = CameraInterface(camera_service_req_url, camera_service_cmd_url)
     cam_worker_thread = threading.Thread(target=camera_processing, args=(5, webcam), daemon=True)
     cam_worker_thread.start()
-    scan_worker()
+    scan_worker_thread = threading.Thread(target=scan_worker, daemon=True)
+    scan_worker_thread.start()
+    controller_processing()
     
