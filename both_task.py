@@ -8,12 +8,12 @@ from mrlib.motion_interface import MotionInterface
 from mrlib.camera_interface import CameraInterface
 
 # Local host only
-# motors_service_req_url="tcp://127.0.0.1:5555"
-# motors_service_cmd_url="tcp://127.0.0.1:5556"
-# camera_service_req_url="tcp://127.0.0.1:5557"
-# camera_service_cmd_url="tcp://127.0.0.1:5558"
-# lidarc_service_req_url="tcp://127.0.0.1:5559"
-# lidarc_service_cmd_url="tcp://127.0.0.1:5560"
+motors_service_req_url="tcp://127.0.0.1:5555"
+motors_service_cmd_url="tcp://127.0.0.1:5556"
+camera_service_req_url="tcp://127.0.0.1:5557"
+camera_service_cmd_url="tcp://127.0.0.1:5558"
+lidarc_service_req_url="tcp://127.0.0.1:5559"
+lidarc_service_cmd_url="tcp://127.0.0.1:5560"
 
 # # Public
 # motors_service_req_url="tcp://66.71.103.66:5555"
@@ -414,6 +414,9 @@ if __name__ == "__main__":
     cam_worker_thread.start()
     scan_worker_thread = threading.Thread(target=scan_worker, daemon=True)
     scan_worker_thread.start()
+    # controller_thread = threading.Thread(target=controller_processing, daemon=True)
+    # controller_thread.start()
+    # scan_worker()
     controller_processing()
     
     
