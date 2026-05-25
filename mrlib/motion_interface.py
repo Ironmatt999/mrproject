@@ -20,7 +20,7 @@ class MotionInterface(RemoteClientBase):
     # Custom methods
     # ---------------------------------------------
 
-    def connect(self, port='/dev/ttyACM0', baud_rate=57600, timeout=1):
+    def connect(self, port='/dev/ttyACM0', baud_rate=57600, timeout=1) -> None:
         """
         If serial_port is provided, use it (for testing).
         Otherwise create a real serial connection.
