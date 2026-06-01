@@ -8,20 +8,20 @@ from mrlib.motion_interface import MotionInterface
 from mrlib.camera_interface import CameraInterface
 
 # Local host only
-motors_service_req_url="tcp://127.0.0.1:5555"
-motors_service_cmd_url="tcp://127.0.0.1:5556"
-camera_service_req_url="tcp://127.0.0.1:5557"
-camera_service_cmd_url="tcp://127.0.0.1:5558"
-lidarc_service_req_url="tcp://127.0.0.1:5559"
-lidarc_service_cmd_url="tcp://127.0.0.1:5560"
+# motors_service_req_url="tcp://127.0.0.1:5555"
+# motors_service_cmd_url="tcp://127.0.0.1:5556"
+# camera_service_req_url="tcp://127.0.0.1:5557"
+# camera_service_cmd_url="tcp://127.0.0.1:5558"
+# lidarc_service_req_url="tcp://127.0.0.1:5559"
+# lidarc_service_cmd_url="tcp://127.0.0.1:5560"
 
 # # Public
-# motors_service_req_url="tcp://66.71.103.66:5555"
-# motors_service_cmd_url="tcp://66.71.103.66:5556"
-# camera_service_req_url="tcp://66.71.103.66:5557"
-# camera_service_cmd_url="tcp://66.71.103.66:5558"
-# lidarc_service_req_url="tcp://66.71.103.66:5559"
-# lidarc_service_cmd_url="tcp://66.71.103.66:5560"
+motors_service_req_url="tcp://66.71.103.66:5555"
+motors_service_cmd_url="tcp://66.71.103.66:5556"
+camera_service_req_url="tcp://66.71.103.66:5557"
+camera_service_cmd_url="tcp://66.71.103.66:5558"
+lidarc_service_req_url="tcp://66.71.103.66:5559"
+lidarc_service_cmd_url="tcp://66.71.103.66:5560"
 
 WIDTH, HEIGHT = 800, 800
 CENTER = (WIDTH // 2, HEIGHT // 2)
@@ -98,7 +98,7 @@ def scan_worker(target_frame_rate = 5):
                 running = False
 
         scan_set = lidar.get_scan()
-        np.savetxt('data.txt', scan_set, delimiter=', ')
+        np.savetxt('data2.txt', scan_set, delimiter=', ')
         if len(scan_set) > 0:
             xs, ys = polar_to_cartesian(scan_set[:,0], scan_set[:,1]+90)
             N = len(xs)
